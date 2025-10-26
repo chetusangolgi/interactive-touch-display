@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Home } from 'lucide-react';
+import { Home, ArrowLeft } from 'lucide-react';
 
 interface Button {
   id: number;
@@ -11,16 +11,19 @@ interface Button {
   label: string;
 }
 
+type Screen = 'main' | 'knowMore';
+
 function App() {
   const [buttons, setButtons] = useState<Button[]>([]);
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);
+  const [currentScreen, setCurrentScreen] = useState<Screen>('main');
+  const [previousScreen, setPreviousScreen] = useState<Screen>('main');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // Static button positions
     const generatedButtons: Button[] = [];
     const videoUrls = [
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
@@ -30,25 +33,25 @@ function App() {
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4'
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // about chennai port video
+      '' // placeholder for know more
     ];
 
     const positions = [
-      { x: 2, y: 72, width: 220, height: 60 },
-      { x: 12, y: 90, width: 380, height: 60 },
-      { x: 29, y: 71.5, width: 200, height: 75 },
-      { x: 32.5, y: 92, width: 170, height: 70 },
-      { x: 42, y: 75, width: 250, height: 75 },
-      { x: 58, y: 68, width: 120, height: 55 },
-      { x: 61, y: 82, width: 200, height: 80 },
-      { x: 53, y: 92, width: 260, height: 75 },
-      { x: 73, y: 88, width: 220, height: 70 },
-      { x: 80, y: 80, width: 230, height: 60 },
-      { x: 10, y: 10, width: 120, height: 50 }
+      { x: 4, y: 62, width: 380, height: 60 },
+      { x: 27, y: 52, width: 200, height: 75 },
+      { x: 28, y: 61, width: 170, height: 70 },
+      { x: 52, y: 51, width: 250, height: 75 },
+      { x: 63, y: 36, width: 120, height: 55 },
+      { x: 68, y: 48, width: 200, height: 80 },
+      { x: 64, y: 63, width: 260, height: 75 },
+      { x: 78, y: 55, width: 220, height: 70 },
+      { x: 84, y: 47, width: 230, height: 60 },
+      { x: 7, y: 9, width: 289, height: 69 },
+      { x: 81, y: 10, width: 235, height: 66 }
     ];
 
     const labels = [
-      'outer harbour',
       'chennai port parking plaza',
       'bahrathi dock',
       'dp world',
@@ -58,7 +61,8 @@ function App() {
       'cruise terminal',
       'paved yards',
       'exim godowns',
-      'extra'
+      'about chennai port',
+      'know more'
     ];
 
     for (let i = 0; i < 11; i++) {
@@ -76,8 +80,13 @@ function App() {
     setButtons(generatedButtons);
   }, []);
 
-  const handleButtonClick = (videoUrl: string) => {
-    setCurrentVideo(videoUrl);
+  const handleButtonClick = (videoUrl: string, label: string) => {
+    if (label === 'know more') {
+      setCurrentScreen('knowMore');
+    } else {
+      setPreviousScreen(currentScreen);
+      setCurrentVideo(videoUrl);
+    }
   };
 
   const handleVideoEnd = () => {
@@ -86,6 +95,16 @@ function App() {
 
   const handleCloseVideo = () => {
     setCurrentVideo(null);
+  };
+
+  const handleGoHome = () => {
+    setCurrentScreen('main');
+    setCurrentVideo(null);
+  };
+
+  const handleGoBack = () => {
+    setCurrentVideo(null);
+    setCurrentScreen(previousScreen);
   };
 
   useEffect(() => {
@@ -120,15 +139,15 @@ function App() {
   return (
     <div
       className="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url(/bg.png)', touchAction: 'none' }}
-      onContextMenu={(e) => e.preventDefault()}
+      style={{ backgroundImage: 'url(/bg.jpg)', touchAction: 'none' }}
+      // onContextMenu={(e) => e.preventDefault()}
     >
 
-      {/* Buttons */}
-      {buttons.map((button) => (
+      {/* Buttons - Main Screen */}
+      {currentScreen === 'main' && buttons.map((button) => (
         <button
           key={button.id}
-          onClick={() => handleButtonClick(button.videoUrl)}
+          onClick={() => handleButtonClick(button.videoUrl, button.label)}
           className="absolute bg-white/30 text-black/40 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-white/10"
           style={{
             left: `${button.x}%`,
@@ -137,10 +156,42 @@ function App() {
             height: `${button.height}px`,
           }}
         >
-
           <span className="font-semibold text-sm whitespace-nowrap">{button.label}</span>
         </button>
       ))}
+
+      {/* Know More Screen */}
+      {currentScreen === 'knowMore' && (
+        <div className="fixed inset-0 z-40 bg-white">
+          <div className="flex gap-8 items-center justify-center h-1/2 mt-[12%]">
+            <button
+              onClick={() => {
+                setPreviousScreen('knowMore');
+                setCurrentVideo('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+              }}
+              className="bg-red-500  text-white px-12 py-6 shadow-lg transition-all duration-300 hover:scale-105 font-semibold text-xl"
+            >
+              Our Terminal
+            </button>
+            <button
+              onClick={() => {
+                setPreviousScreen('knowMore');
+                setCurrentVideo('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4');
+              }}
+              className="bg-red-500 text-white px-12 py-6   shadow-lg transition-all duration-300 hover:scale-105 font-semibold text-xl"
+            >
+              Future Projects
+            </button>
+          </div>
+          <button
+            onClick={handleGoHome}
+            className="fixed bottom-[10%] left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-8 py-4 shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 font-semibold"
+          >
+            <Home size={24} />
+            <span>Home</span>
+          </button>
+        </div>
+      )}
 
       {/* Video Player Modal */}
       {currentVideo && (
@@ -148,16 +199,26 @@ function App() {
           <video
             ref={videoRef}
             src={currentVideo}
-            onEnded={handleVideoEnd}
+            onEnded={previousScreen === 'knowMore' ? handleGoBack : handleGoHome}
             className="w-full h-full object-cover"
           />
-          <button
-            onClick={handleCloseVideo}
-            className="fixed bottom-8 left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
-          >
-            <Home size={24} />
-            <span className="font-semibold">Home</span>
-          </button>
+          {previousScreen === 'knowMore' ? (
+            <button
+              onClick={handleGoBack}
+              className="fixed bottom-8 left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
+            >
+              <ArrowLeft size={24} />
+              <span className="font-semibold">Back</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleGoHome}
+              className="fixed bottom-8 left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
+            >
+              <Home size={24} />
+              <span className="font-semibold">Home</span>
+            </button>
+          )}
         </div>
       )}
     </div>
