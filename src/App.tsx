@@ -24,16 +24,16 @@ function App() {
     // Static button positions
     const generatedButtons: Button[] = [];
     const videoUrls = [
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', // about chennai port video
+      '/chennai-port-parking-plaza.mp4',
+      '/bahrathi-dock.mp4',
+      '/dp-world.mp4',
+      '/ambedkar-dock.mp4',
+      '/psa.mp4',
+      '/jawahar-dock.mp4',
+      '/cruise-terminal.mp4',
+      '/paved-yards.mp4',
+      '/exim-godowns.mp4',
+      '/about-chennai-port.mp4',
       '' // placeholder for know more
     ];
 
@@ -148,7 +148,7 @@ function App() {
         <button
           key={button.id}
           onClick={() => handleButtonClick(button.videoUrl, button.label)}
-          className="absolute bg-white/30 text-black/40 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-white/10"
+          className="absolute text-black/40 flex items-center justify-center gap-3 transition-all duration-300"
           style={{
             left: `${button.x}%`,
             top: `${button.y}%`,
@@ -156,7 +156,7 @@ function App() {
             height: `${button.height}px`,
           }}
         >
-          <span className="font-semibold text-sm whitespace-nowrap">{button.label}</span>
+          {/* <span className="font-semibold text-sm whitespace-nowrap">{button.label}</span> */}
         </button>
       ))}
 
@@ -167,7 +167,7 @@ function App() {
             <button
               onClick={() => {
                 setPreviousScreen('knowMore');
-                setCurrentVideo('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+                setCurrentVideo('/our-terminal.mp4');
               }}
               className="bg-red-500  text-white px-12 py-6 shadow-lg transition-all duration-300 hover:scale-105 font-semibold text-xl"
             >
@@ -176,7 +176,7 @@ function App() {
             <button
               onClick={() => {
                 setPreviousScreen('knowMore');
-                setCurrentVideo('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4');
+                setCurrentVideo('/future-projects.mp4');
               }}
               className="bg-red-500 text-white px-12 py-6   shadow-lg transition-all duration-300 hover:scale-105 font-semibold text-xl"
             >
@@ -205,7 +205,7 @@ function App() {
           {previousScreen === 'knowMore' ? (
             <button
               onClick={handleGoBack}
-              className="fixed bottom-8 left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
+              className="fixed bottom-[2%] left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
             >
               <ArrowLeft size={24} />
               <span className="font-semibold">Back</span>
@@ -213,7 +213,7 @@ function App() {
           ) : (
             <button
               onClick={handleGoHome}
-              className="fixed bottom-8 left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
+              className="fixed bottom-[2%] left-8 bg-white/90 hover:bg-white text-black p-4 rounded shadow-lg transition-all duration-300 hover:scale-110 flex items-center gap-2"
             >
               <Home size={24} />
               <span className="font-semibold">Home</span>
